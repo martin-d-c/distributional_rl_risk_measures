@@ -45,20 +45,17 @@ This project includes two differents environments described below and regroups s
   <img src="outputs/maze.png" alt="Maze environment" background-color="red" title="Maze environment" width="360" height="200">
 </p>
 
-The first environment is a maze made up of 25 cells: a start cell (upper left corner), an arrival cell (lower right corner), 15 free cells (in white), 6 blocked cells (in black) as well as 2 special cells (in red) whose role will depend on the situation. The objective is to teach an agent the optimal path in this maze between the start and the end cell, taking into account the travel time and the effect of the special cells. The possible actions are the four directions and the state of an agent is its row and column indices. Once the action is chosen, the agent stays in its position if the action is invalid (if it takes it to a blocked cell or out of the frame) or performs the chosen movement if the action is valid. The rewards are : $-0.75$ in the case of an invalid action, $-0.04$ if the action is valid but the agent does not reach the target and $1$ if the agent reaches its target.
+The first environment is a maze made up of 25 cells: a start cell (upper left corner), an arrival cell (lower right corner), 15 free cells (in white), 6 blocked cells (in black) as well as 2 special cells (in red) whose role will depend on the situation. The objective is to teach an agent the optimal path in this maze between the start and the end cell, taking into account the travel time and the effect of the special cells. The possible actions are the four directions and the state of an agent is its row and column indices. Once the action is chosen, the agent stays in its position if the action is invalid (if it takes it to a blocked cell or out of the frame) or performs the chosen movement if the action is valid. The rewards are : -0.75 in the case of an invalid action, -0.04 if the action is valid but the agent does not reach the target and 1 if the agent reaches its target.
 
 Two possible strategies are shown in the figure: the risky strategy is the optimum in the case where the special cells act as free cells and the risky strategy has a constant state value function regardless of the action of the special cells.
 
 This environment is mainly inspired from [[6]](https://www.samyzaf.com/ML/rl/qmaze.html).
 
-
-
-
 ### 2.2 Portfolio
 
-This second environment is directly inspired from the article by Vadori et al. [[5]](https://doi.org/10.1145%2F3383455.3422519). It concerns the problem of investing in two financial assets, one risky and one risk-free. The state space consists of three levels of volatility: *LowVol*, *MediumVol* and *HighVol*. The greater the investment in the risky asset, the greater is the probability of entering a high volatility state. At each time, the investor chooses to invest a quantity $q_R$ in the risky asset and a quantity $q_{RF}$ in the risk-free asset. He then receives a reward $R = q_{RF}\mu(S) + q_R( \mu(S) + \sigma(S)H ) $ with $H$ a standard Gaussian random variable, $\mu(S)$ the risk-free rate in state $S$ (increasing according to the level of volatility of $S$) and $\sigma(S)$ the volatility of state $S$.
+This second environment is directly inspired from the article by Vadori et al. [[5]](https://doi.org/10.1145%2F3383455.3422519). It concerns the problem of investing in two financial assets, one risky and one risk-free. The state space consists of three levels of volatility: *LowVol*, *MediumVol* and *HighVol*. The greater the investment in the risky asset, the greater is the probability of entering a high volatility state. At each time, the investor chooses to invest some amount in the risky asset and some in the risk-free one. He then receives a reward depending on the risk-free rate (whose expectation increases with the level of volatility of the state) and of the volatility of the state.
 
-The invested quantities $q_R$ and $q_{RF}$ are positive integers satisfying the condition $q_{RF} + q_R \leq q_{max}$ and the episodes are of fixed duration $T$.
+The invested quantities and are positive integers bounded by a constant and the episodes are of fixed duration.
 
 ## **3.References**
  [1] Marc G. Bellemare, Will Dabney et Mark Rowland. *Distributional Reinforcement
