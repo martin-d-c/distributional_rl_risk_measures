@@ -9,7 +9,7 @@ from torch.distributions import Categorical
 
 from src.network import PolicyNet
 from src.utils import format_time
-from maze.maze_class import Qmaze, print_stoch_policy
+from maze.maze_class import Qmaze
 
 def qtrain_mv(m:int, V_min:float, V_max:float, qmaze:Qmaze, n_epochs:int, lambd:float=0.5, 
             gamma:float=1., alpha=0.3, num_actions:int=4, **opt):
@@ -129,22 +129,11 @@ def mean_var_training_actor_critic_fenchel_reg(policy_model:PolicyNet, qmaze:Qma
     v_2 = torch.zeros((nrows, ncols)) # estimate of the expectation of the square of the returns
 
     y = torch.tensor(0., dtype=torch.float) # for Legendre-Fenchel duality
-    eps_start = 0.9 
-    eps_end = 0.05
-    eps_decay = 0.99
-    steps_done = 0
     for epoch in range(1,n_epoch+1):
 
         #Generate an episode
         rat_cell = random.choice(qmaze.free_cells)
         qmaze.reset((4,2))
-        # if torch.argmax(policy_model.forward(torch.tensor(qmaze.observe()[0], dtype=torch.float).unsqueeze(0))) == 1:
-        #     qmaze.reset((3,2))
-        #     if torch.argmax(policy_model.forward(torch.tensor(qmaze.observe()[0], dtype=torch.float).unsqueeze(0))) == 1:
-        #         qmaze.reset((2,2))
-        #         if torch.argmax(policy_model.forward(torch.tensor(qmaze.observe()[0], dtype=torch.float).unsqueeze(0))) == 2:
-        #             print(epoch)
-        #             print(print_stoch_policy(policy_model,qmaze))
             
         qmaze.reset(rat_cell)
         state = qmaze.observe()
@@ -154,14 +143,7 @@ def mean_var_training_actor_critic_fenchel_reg(policy_model:PolicyNet, qmaze:Qma
             probs = policy_model.forward(torch.tensor(state[0], dtype=torch.float).unsqueeze(0))
             # sample an action from that set of probs
             sampler = Categorical(probs)
-            eps_threshold = eps_end + (eps_start - eps_end) * eps_decay ** steps_done
-            steps_done += 1
-
-            # Choose an action according to epsilon-greedy policy
-            if np.random.rand() < eps_threshold:
-                action = torch.tensor(random.choice(qmaze.valid_actions()))
-            else:
-                action = sampler.sample()
+            action = sampler.sample()
 
             # use that action in the environment
             prev_row, prev_col,_ = qmaze.state
@@ -184,7 +166,7 @@ def mean_var_training_actor_critic_fenchel_reg(policy_model:PolicyNet, qmaze:Qma
 
             #updating y
             y+= alpha_y*(2*(reward+v_1[row, col]) + 1/lambd - 2*y)
-            #y+= alpha_y*(2*lambd*v_1[prev_row, prev_col] -2*y )
+
             # calculate loss_1  
             loss_1 = log_prob * delta_1 
 
@@ -202,8 +184,6 @@ def mean_var_training_actor_critic_fenchel_reg(policy_model:PolicyNet, qmaze:Qma
                 loss_2 = delta_2*log_prob + 2*reward*delta_1_2*log_prob_2
             
             loss = I*(2*y*loss_1-loss_2) - tau*sampler.entropy()
-            #loss = I*( loss_1*(1+2*lambd*y)-lambd*loss_2 ) - tau*sampler.entropy() 
-            #loss =  I*( loss_1-lambd*(loss_2-loss_1**2) ) - tau*sampler.entropy() 
 
             #Train the policy
             optimizer.zero_grad()

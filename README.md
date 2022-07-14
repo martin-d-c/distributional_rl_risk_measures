@@ -1,6 +1,6 @@
 # **Distributional Reinforcement Learning and Risk Measures**
 
-This repository regroups the main methods implemented during my internship at [UQAM](https://sciences.uqam.ca) in summer 2022 about *Distributional Reinforcement Learning and Risk Measures* supervised  by Arthur Charpentier.
+This repository regroups the main methods implemented during my internship at [UQAM](https://math.uqam.ca) in summer 2022 about *Distributional Reinforcement Learning and Risk Measures* supervised  by Arthur Charpentier.
 
 This project includes two differents environments described below and regroups several implementation of reinforcement learning and distributional reinforcement learning methods with a focus on risk-sensitive optimization.
 
@@ -45,7 +45,7 @@ This project includes two differents environments described below and regroups s
   <img src="outputs/maze.png" alt="Maze environment" background-color="red" title="Maze environment" width="360" height="200">
 </p>
 
-The first environment is a maze made up of 25 cells: a start cell (upper left corner), an arrival cell (lower right corner), 15 free cells (in white), 6 blocked cells (in black) as well as 2 special cells (in red) whose role will depend on the situation. The objective is to teach an agent the optimal path in this maze between the start and the end cell, taking into account the travel time and the effect of the special cells. The possible actions are the four directions and the state of an agent is its row and column indices. Once the action is chosen, the agent stays in its position if the action is invalid (if it takes it to a blocked cell or out of the frame) or performs the chosen movement if the action is valid. The rewards are : -0.75 in the case of an invalid action, -0.04 if the action is valid but the agent does not reach the target and 1 if the agent reaches its target.
+The first environment is a maze made up of 25 cells: a start cell (upper left corner), an arrival cell (lower right corner), 15 free cells (in white), 6 blocked cells (in black) as well as 2 special cells (in red) whose role will depend on the situation. The objective is to teach an agent the optimal path in this maze between the start and the end cell, taking into account the travel time and the effect of the special cells. The possible actions are the four directions. Once the action is chosen, the agent stays in its position if the action is invalid (if it takes it to a blocked cell or out of the frame) or performs the chosen movement if the action is valid. The rewards are : -0.75 in the case of an invalid action,60.25 if the action is valid but the celle has already been visited, -0.04 if the action is valid but the agent does not reach the target and 1 if the agent reaches its target.
 
 Two possible strategies are shown in the figure: the risky strategy is the optimum in the case where the special cells act as free cells and the risky strategy has a constant state value function regardless of the action of the special cells.
 
